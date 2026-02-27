@@ -1,0 +1,71 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "equipcost-forecast"
+version = "0.1.0"
+description = "Biomedical equipment TCO forecasting platform"
+requires-python = ">=3.11"
+dependencies = [
+    "sqlalchemy>=2.0",
+    "fastapi",
+    "uvicorn[standard]",
+    "pandas>=2.2",
+    "numpy",
+    "scipy",
+    "statsmodels",
+    "streamlit",
+    "plotly>=5.18",
+    "pydantic>=2.6",
+    "pydantic-settings",
+    "typer",
+    "rich",
+    "python-multipart",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "pytest-asyncio",
+    "httpx",
+    "ruff",
+    "black",
+    "isort",
+    "mypy",
+    "faker",
+]
+
+[project.scripts]
+equipcost = "equipcost_forecast.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["src/equipcost_forecast"]
+omit = [
+    "src/equipcost_forecast/dashboard/*",
+    "src/equipcost_forecast/__main__.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "if __name__",
+    "pragma: no cover",
+]
