@@ -20,7 +20,55 @@ from equipcost_forecast.models.orm import (
 def get_db_factory():
     engine = get_engine()
     init_db(engine)
-    return get_session_factory(engine)
+
+    # Auto-bootstrap: generate data + aggregate if the database is empty
+    factory = get_session_factory(engine)
+    check_session = factory()
+    try:
+        count = (
+            check_session.execute(select(func.count(EquipmentRegistry.id))).scalar()
+            or 0
+        )
+        if count == 0:
+            _bootstrap_data(engine, factory)
+    finally:
+        check_session.close()
+
+    return factory
+
+
+def _bootstrap_data(engine, factory):
+    """Generate synthetic data and compute cost rollups for first-run deployment."""
+    import importlib.util
+    from pathlib import Path
+
+    from equipcost_forecast.forecasting.cost_aggregator import CostAggregator
+
+    # Load generate_data.py by file path (scripts/ is not a Python package)
+    script_path = (
+        Path(__file__).resolve().parent.parent.parent.parent
+        / "scripts"
+        / "generate_data.py"
+    )
+    spec = importlib.util.spec_from_file_location("generate_data", script_path)
+    gen = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gen)
+
+    session = factory()
+    try:
+        equipment = gen.generate_equipment(session)
+        gen.generate_work_orders(session, equipment)
+        gen.generate_service_contracts(session, equipment)
+        gen.generate_pm_schedules(session, equipment)
+        session.commit()
+
+        CostAggregator(session).compute_monthly_rollups()
+        session.commit()
+    except Exception:
+        session.rollback()
+        raise
+    finally:
+        session.close()
 
 
 def get_session():
