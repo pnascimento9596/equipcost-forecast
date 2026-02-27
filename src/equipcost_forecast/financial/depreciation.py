@@ -1,6 +1,7 @@
 from datetime import date
 from decimal import Decimal
 
+from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
 from equipcost_forecast.models.orm import DepreciationSchedule, EquipmentRegistry
@@ -156,7 +157,7 @@ def compute_book_value(
 
     # Delete existing schedules for this equipment+method
     session.execute(
-        DepreciationSchedule.__table__.delete().where(
+        delete(DepreciationSchedule).where(
             DepreciationSchedule.equipment_id == equipment_id,
             DepreciationSchedule.method == method,
         )

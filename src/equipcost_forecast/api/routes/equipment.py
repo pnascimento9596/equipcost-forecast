@@ -227,7 +227,7 @@ def get_cost_history(asset_tag: str, session: Session = Depends(get_db)):
         "asset_tag": asset_tag,
         "months": [
             {
-                "month": r.month.isoformat(),
+                "month": r.month.isoformat() if r.month else None,
                 "pm_cost": float(r.pm_cost or 0),
                 "corrective_cost": float(r.corrective_cost or 0),
                 "parts_cost": float(r.parts_cost or 0),

@@ -98,7 +98,7 @@ if page == "Fleet Overview":
 
     # ── Equipment class distribution ──
     st.subheader("Equipment Class Distribution")
-    class_counts = {}
+    class_counts: dict[str, int] = {}
     for e in equipment:
         class_counts[e.equipment_class] = class_counts.get(e.equipment_class, 0) + 1
 

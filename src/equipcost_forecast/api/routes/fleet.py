@@ -1,4 +1,5 @@
 from datetime import date
+from typing import TypedDict
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy import func, select
@@ -66,8 +67,15 @@ def age_analysis(facility_id: str | None = None, session: Session = Depends(get_
     equipment = list(session.scalars(stmt).all())
     today = date.today()
 
+    class _Cohort(TypedDict):
+        min: int
+        max: int
+        count: int
+        classes: dict[str, int]
+        total_cost: float
+
     # Build age cohorts: 0-2, 3-5, 6-8, 9-11, 12+
-    cohorts = {
+    cohorts: dict[str, _Cohort] = {
         "0-2 years": {"min": 0, "max": 2, "count": 0, "classes": {}, "total_cost": 0.0},
         "3-5 years": {"min": 3, "max": 5, "count": 0, "classes": {}, "total_cost": 0.0},
         "6-8 years": {"min": 6, "max": 8, "count": 0, "classes": {}, "total_cost": 0.0},

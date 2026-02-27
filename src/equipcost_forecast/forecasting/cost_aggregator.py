@@ -2,7 +2,7 @@ from datetime import date
 from decimal import Decimal
 
 import pandas as pd
-from sqlalchemy import func, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from equipcost_forecast.models.orm import (
@@ -109,9 +109,7 @@ class CostAggregator:
 
             # Delete existing rollups for this equipment
             self.session.execute(
-                MonthlyCostRollup.__table__.delete().where(
-                    MonthlyCostRollup.equipment_id == eid
-                )
+                delete(MonthlyCostRollup).where(MonthlyCostRollup.equipment_id == eid)
             )
 
             for month_str in sorted(all_months):
