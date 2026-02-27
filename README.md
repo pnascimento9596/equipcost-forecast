@@ -1,6 +1,6 @@
 # equipcost-forecast
 
-[![CI](https://github.com/your-org/equipcost-forecast/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/equipcost-forecast/actions/workflows/ci.yml)
+[![CI](https://github.com/pnascimento9596/equipcost-forecast/actions/workflows/ci.yml/badge.svg)](https://github.com/pnascimento9596/equipcost-forecast/actions/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-83%25-brightgreen)](.)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -84,7 +84,7 @@ graph TB
 ### Installation
 
 ```bash
-git clone https://github.com/your-org/equipcost-forecast.git
+git clone https://github.com/pnascimento9596/equipcost-forecast.git
 cd equipcost-forecast
 python -m venv .venv
 source .venv/bin/activate
